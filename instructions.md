@@ -13,3 +13,4 @@
 ### F flagged spot
 ### input choice - coordinate system with letter at the beginning ('f' / 'r')
 
+#test
