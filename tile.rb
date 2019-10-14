@@ -1,24 +1,17 @@
-def Tile
-  @bombed = false
-  @flagged = false
-  @revealed = false
+class Tile
+  attr_reader :bombed, :revealed
 
-  def initialize
-  end
-
-  def []=(pos, action)
-    row, col = pos
-    tile = grid[row][col]
-    if (action == "r")
-      tile.revealed = true
-    else
-      tile.flagged = !tile.flagged
-    end
+  def initialize(bombed)
+    @bombed = bombed
+    @flagged = false
+    @revealed = false
   end
 
   #   rendering board
   def to_s
-    value == 0 ? " " : value.to_s.colorize(color)
+    return "*" if @revealed == false
+
+    neighbor_bomb_count ? neighbor_bomb_count : "_"
   end
 
   def reveal
@@ -33,6 +26,19 @@ def Tile
   end
 
   def neighbor_bomb_count
+    false
     # filter neighbour with bombs
+  end
+
+  def set_bomb
+    @bombed = true
+  end
+
+  def act_on_tile(action)
+    if action == "r"
+      reveal
+    else
+      @flagged = !@flagged
+    end
   end
 end
