@@ -2,24 +2,33 @@ require_relative "board"
 
 class Game
   def initialize
-    @board = Board.new
+    @board = nil
     @win = false
+    @keep_playing = true
   end
 
   def run
     until game_solved?
-      @board.render
+      board_render
+
       user_play
     end
+
+    puts @win ? "You've win." : "You've lost."
   end
 
   def user_play
+    debugger
     user_action_and_coords = get_user_input
     action = user_action_and_coords["action"]
     pos = user_action_and_coords["coordinates"]
     # debugger
+    unless @board
+      @board ||= Board.new(pos)
+    end
     tile = @board[pos]
-    tile.act_on_tile(action)
+    #  tile.act_on_tile(action)
+    @keep_playing = tile.act_on_tile(action)
   end
 
   def get_user_input
@@ -49,14 +58,15 @@ class Game
   end
 
   def game_solved?
+    return false unless @board
+
+    return true unless @keep_playing
+
     revealed_tiles = 0
-
     # to powinna robić metoda board
-    end_game = @board.any? do |row|
-      row.any? { |tile| tile.bombed == true }
-    end
-
-    return true if end_game
+    # end_game = @board.any? do |row|
+    #   row.any? { |tile| tile.bombed == true && tile.revealed == true }
+    # end
 
     # to powinna robić metoda board
     @board.each do |row|
@@ -71,6 +81,24 @@ class Game
     end
 
     false
+  end
+
+  def board_render
+    # debugger
+    if @board
+      @board.render
+    else
+      nine_stars = []
+      9.times { nine_stars << "*" }
+      nine_stars = nine_stars.join(" ")
+      # nine_stars = "* * * * * * * * * *"
+
+      puts "#{(0..9).to_a.join(" ")}"
+      9.times do |i|
+        puts "#{i} #{nine_stars}"
+        # (0..9).to_a.join(" ")
+      end
+    end
   end
 end
 
