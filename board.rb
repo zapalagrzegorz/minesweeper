@@ -1,23 +1,29 @@
 require_relative "tile"
 require "byebug"
+require "colorize"
 
 class Board
   include Enumerable
 
   def initialize(first_pick)
-    @board = Array.new(10) do
-      Array.new(10) { Tile.new }
+    @board = Array.new(10) { Array.new(10) }
+
+    @board.each_index do |row|
+      @board[row].each_index do |column|
+        @board[row][column] = Tile.new(@board)
+      end
     end
 
     place_random_bombs(first_pick)
   end
 
   def render
-    puts "  #{(0..9).to_a.join(" ")}"
+    puts "  #{(0..9).to_a.join(" ")}".colorize(:blue)
 
     @board.each_with_index do |row, i|
       # join rzutuje każdy element tablicy na string (to_s)
-      puts "#{i} #{row.join(" ")}"
+      print "#{i}".colorize(:blue)
+      puts " #{row.join(" ")}"
     end
   end
 
@@ -33,7 +39,6 @@ class Board
   end
 
   def [](pos)
-    # debugger
     row, col = pos
 
     @board[row][col]
@@ -66,6 +71,4 @@ class Board
 
     @board
   end
-
-  #
 end
