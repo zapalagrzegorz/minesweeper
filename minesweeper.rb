@@ -1,6 +1,9 @@
 require_relative "board"
+require "colorize"
 
 class Game
+  attr_reader :board
+
   def initialize
     @board = nil
     @win = false
@@ -10,7 +13,6 @@ class Game
   def run
     until game_solved?
       board_render
-
       user_play
     end
 
@@ -18,7 +20,7 @@ class Game
   end
 
   def user_play
-    debugger
+    # debugger
     user_action_and_coords = get_user_input
     action = user_action_and_coords["action"]
     pos = user_action_and_coords["coordinates"]
@@ -28,7 +30,7 @@ class Game
     end
     tile = @board[pos]
     #  tile.act_on_tile(action)
-    @keep_playing = tile.act_on_tile(action)
+    @keep_playing = tile.act_on_tile(action, pos)
   end
 
   def get_user_input
@@ -89,13 +91,14 @@ class Game
       @board.render
     else
       nine_stars = []
-      9.times { nine_stars << "*" }
+      10.times { nine_stars << "*" }
       nine_stars = nine_stars.join(" ")
       # nine_stars = "* * * * * * * * * *"
 
-      puts "#{(0..9).to_a.join(" ")}"
-      9.times do |i|
-        puts "#{i} #{nine_stars}"
+      puts "  #{(0..9).to_a.join(" ")}".colorize(:blue)
+      10.times do |i|
+        print "#{i}".colorize(:blue)
+        print " #{nine_stars}\n"
         # (0..9).to_a.join(" ")
       end
     end
@@ -103,7 +106,14 @@ class Game
 end
 
 if $PROGRAM_NAME == __FILE__
-  Game.new().run
+  Game.new()
   # else
 end
+# load "minesweeper.rb"
+# game = Game.new
+# game.user_play
+
+# game.board[]
+# game.user_play
+
 # game = Game.new
