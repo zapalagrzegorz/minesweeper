@@ -3,18 +3,26 @@ require "byebug"
 require "colorize"
 
 class Board
+  attr_accessor :board
+
   include Enumerable
 
-  def initialize(first_pick)
+  def self.make_debug_board()
+    self.new([0, 0], true)
+  end
+
+  def initialize(first_pick, debug = false)
     @board = Array.new(10) { Array.new(10) }
 
-    @board.each_index do |row|
-      @board[row].each_index do |column|
-        @board[row][column] = Tile.new(@board)
+    unless debug
+      @board.each_index do |row|
+        @board[row].each_index do |column|
+          @board[row][column] = Tile.new(@board, [row, column])
+        end
       end
-    end
 
-    place_random_bombs(first_pick)
+      place_random_bombs(first_pick)
+    end
   end
 
   def render
@@ -23,8 +31,12 @@ class Board
     @board.each_with_index do |row, i|
       # join rzutuje każdy element tablicy na string (to_s)
       print "#{i}".colorize(:blue)
+      # debugger
       puts " #{row.join(" ")}"
     end
+  end
+
+  def render_debug
   end
 
   def []=(pos, action)

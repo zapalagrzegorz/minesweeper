@@ -87,6 +87,7 @@ class Game
 
   def board_render
     # debugger
+
     if @board
       @board.render
     else
@@ -102,6 +103,22 @@ class Game
         # (0..9).to_a.join(" ")
       end
     end
+  end
+
+  def board_render_debug
+    @board ||= Board.new([0, 0])
+    debug_board = Board.make_debug_board
+
+    # debugger
+    debug_board.board = @board.board.map do |row|
+      row.map do |tile|
+        tile.revealed = true
+        tile
+      end
+    end
+
+    # debugger
+    debug_board.render
   end
 end
 
