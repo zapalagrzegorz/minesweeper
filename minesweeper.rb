@@ -20,17 +20,14 @@ class Game
   end
 
   def user_play
-    # debugger
     user_action_and_coords = get_user_input
     action = user_action_and_coords["action"]
     pos = user_action_and_coords["coordinates"]
-    # debugger
     unless @board
       @board ||= Board.new(pos)
     end
     tile = @board[pos]
-    #  tile.act_on_tile(action)
-    @keep_playing = tile.act_on_tile(action, pos)
+    @keep_playing = tile.act_on_tile(action)
   end
 
   def get_user_input
@@ -86,11 +83,8 @@ class Game
   end
 
   def board_render
-    # debugger
-
     if @board
       @board.render
-    else
       nine_stars = []
       10.times { nine_stars << "*" }
       nine_stars = nine_stars.join(" ")
@@ -109,7 +103,6 @@ class Game
     @board ||= Board.new([0, 0])
     debug_board = Board.make_debug_board
 
-    # debugger
     debug_board.board = @board.board.map do |row|
       row.map do |tile|
         tile.revealed = true
@@ -117,14 +110,12 @@ class Game
       end
     end
 
-    # debugger
     debug_board.render
   end
 end
 
 if $PROGRAM_NAME == __FILE__
   Game.new()
-  # else
 end
 # load "minesweeper.rb"
 # game = Game.new
