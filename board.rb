@@ -31,23 +31,8 @@ class Board
     @board.each_with_index do |row, i|
       # join rzutuje każdy element tablicy na string (to_s)
       print "#{i}".colorize(:blue)
-      # debugger
       puts " #{row.join(" ")}"
     end
-  end
-
-  def render_debug
-  end
-
-  def []=(pos, action)
-    # row, col = pos
-    # debugger
-    # tile = @board[row][col]
-    # if action == "r"
-    #   tile.reveal
-    # else
-    #   tile.flagged = !tile.flagged
-    # end
   end
 
   def [](pos)
@@ -71,7 +56,7 @@ class Board
   def place_random_bombs(pos)
     x, y = pos
     bombs = 10
-    # debugger
+
     until bombs == 0
       randY = rand(10)
       randX = rand(10)
