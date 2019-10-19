@@ -88,13 +88,11 @@ class Game
       nine_stars = []
       10.times { nine_stars << "*" }
       nine_stars = nine_stars.join(" ")
-      # nine_stars = "* * * * * * * * * *"
 
       puts "  #{(0..9).to_a.join(" ")}".colorize(:blue)
       10.times do |i|
         print "#{i}".colorize(:blue)
         print " #{nine_stars}\n"
-        # (0..9).to_a.join(" ")
       end
     end
   end
