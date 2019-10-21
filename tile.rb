@@ -16,13 +16,15 @@ class Tile
 
   #   rendering board
   def to_s
-    return "*" if @revealed == false
-
-    return "!".colorize(:red) if @bombed == true
+    return "!".colorize(:red) if @bombed && @revealed
 
     return "#{@bomb_count}".colorize(:yellow) if @bomb_count.positive?
 
-    "_".colorize(:green)
+    return "_".colorize(:green) if @revealed == true
+
+    return "F".colorize(:light_red) if @flagged
+
+    "*"
   end
 
   def reveal
@@ -46,7 +48,8 @@ class Tile
   def reveal_neighbors
     @direct_neighbors.each do |neighbor|
       x, y = neighbor
-      if !@board[x][y].revealed?
+      # exist?(pos)
+      if @board[x] && @board[x][y] && !@board[x][y].revealed?
         @board[x][y].reveal
       end
     end
@@ -55,7 +58,7 @@ class Tile
   def neighbor_bomb_count
     @direct_neighbors ||= direct_neighbors
 
-    direct_neighbors.each do |neighbor|
+    @direct_neighbors.each do |neighbor|
       x, y = neighbor
       if @board[x] && @board[x][y] && @board[x][y].bombed
         @bomb_count += 1
@@ -70,15 +73,15 @@ class Tile
   end
 
   def act_on_tile(action)
-    if action == "r"
-      reveal
-    else
-      @flagged = !@flagged
-    end
+    return reveal if action == "r"
+
+    @flagged = true if action == "f"
+
+    true
   end
 
   def direct_neighbors
-    @direct_neighbors = []
+    direct_neighbors = []
 
     x, y = @pos
     possible_neighbors = [
@@ -95,14 +98,16 @@ class Tile
     ]
 
     possible_neighbors.each do |neighbor|
-      x, y = neighbor
-      if x >= 0 && y >= 0 && @board[x] && @board[x][y]
-        @direct_neighbors << neighbor
+      neighbour_x, neighbour_y = neighbor
+      if neighbour_x >= 0 && neighbour_y >= 0 && @board[x] && @board[x][y]
+        direct_neighbors << neighbor
       end
     end
+
+    direct_neighbors
   end
 
   def inspect
-    "Tile: @bombed - #{@bombed} - pos: #{@pos}, @revealed - #{@revealed}, @bomb_count - #{@bomb_count}; direct_neighbors: #{@direct_neighbors}"
+    "Tile: @bombed - #{@bombed} - pos: #{@pos}, @revealed - #{@revealed}, @bomb_count - #{@bomb_count}; direct_neighbors: #{@direct_neighbors}; @flagged: #{@flagged}"
   end
 end

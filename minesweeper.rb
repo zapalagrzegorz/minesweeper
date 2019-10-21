@@ -15,17 +15,20 @@ class Game
       board_render
       user_play
     end
-
-    puts @win ? "You've win." : "You've lost."
+    board_render
+    puts @win ? "\nYou've win.".colorize(:green) : "\nYou've lost.".colorize(:red)
   end
 
   def user_play
     user_action_and_coords = get_user_input
+
     action = user_action_and_coords["action"]
     pos = user_action_and_coords["coordinates"]
+
     unless @board
       @board ||= Board.new(pos)
     end
+
     tile = @board[pos]
     @keep_playing = tile.act_on_tile(action)
   end
@@ -85,6 +88,7 @@ class Game
   def board_render
     if @board
       @board.render
+    else
       nine_stars = []
       10.times { nine_stars << "*" }
       nine_stars = nine_stars.join(" ")
@@ -113,7 +117,7 @@ class Game
 end
 
 if $PROGRAM_NAME == __FILE__
-  Game.new()
+  Game.new().run
 end
 # load "minesweeper.rb"
 # game = Game.new
