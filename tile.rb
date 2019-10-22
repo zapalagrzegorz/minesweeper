@@ -108,6 +108,6 @@ class Tile
   end
 
   def inspect
-    "Tile: @bombed - #{@bombed} - pos: #{@pos}, @revealed - #{@revealed}, @bomb_count - #{@bomb_count}; direct_neighbors: #{@direct_neighbors}; @flagged: #{@flagged}"
+    "Tile: @bombed - #{@bombed} - pos: #{@pos}, @revealed - #{@revealed}, @bomb_count - #{@bomb_count}; direct_neighbors: #{@direct_neighbors}; @flagged: #{@flagged}\n"
   end
 end
