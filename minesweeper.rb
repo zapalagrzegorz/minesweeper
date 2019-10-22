@@ -1,7 +1,10 @@
 require_relative "board"
 require "colorize"
+require "yaml"
 
 class Game
+  OPTIONS = ["r", "f", "s"]
+
   attr_reader :board
 
   def initialize
@@ -11,6 +14,8 @@ class Game
   end
 
   def run
+    load_game
+
     until game_solved?
       board_render
       user_play
@@ -22,30 +27,61 @@ class Game
   def user_play
     user_action_and_coords = get_user_input
 
-    action = user_action_and_coords["action"]
-    pos = user_action_and_coords["coordinates"]
-
     unless @board
-      @board ||= Board.new(pos)
+      setup_board(user_action_and_coords)
     end
 
-    tile = @board[pos]
-    @keep_playing = tile.act_on_tile(action)
+    make_tile_action(user_action_and_coords)
+  end
+
+  def make_tile_action(user_input)
+    action = user_input["action"]
+    pos = user_input["coordinates"]
+
+    if action.downcase == "s"
+      save_game
+    else
+      tile = @board[pos]
+      @keep_playing = tile.act_on_tile(action)
+    end
+  end
+
+  def save_game
+    File.open("save-game.yml", "w") do |file|
+      file.write(YAML.dump(@board))
+    end
+  end
+
+  def load_game
+    first_arg, *the_rest = ARGV
+    if first_arg == "save-game.yml"
+      # file = ARGF.read
+      # board = YAML.load(file)
+      board = YAML.load_file("./save-game.yml")
+
+      @board = board
+    end
+  end
+
+  def setup_board(user_input)
+    pos = user_input["coordinates"]
+    @board ||= Board.new(pos)
   end
 
   def get_user_input
     user_input = nil
     until user_input
       puts "Choose operation 'r' - to reveal, 'f' to flag with coordinates like 'r2,3'"
-      user_input = gets.chomp
+      user_input = STDIN.gets.chomp
       user_input = parse_input(user_input)
+      puts
     end
 
     user_input
   end
 
   def parse_input(user_input)
-    return nil unless user_input[0] == "r" || user_input[0] == "f"
+    return nil unless OPTIONS.include?(user_input[0].downcase)
 
     return nil unless user_input[2] == ","
 
