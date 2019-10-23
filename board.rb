@@ -15,6 +15,9 @@ class Board
     @board = Array.new(10) { Array.new(10) }
 
     unless debug
+      # @grid = Array.new(@grid_size) do |row|
+      # Array.new(@grid_size) { |col| Tile.new(self, [row, col]) }
+      # end
       @board.each_index do |row|
         @board[row].each_index do |column|
           @board[row][column] = Tile.new(@board, [row, column])
@@ -60,6 +63,11 @@ class Board
     until bombs == 0
       randY = rand(10)
       randX = rand(10)
+      # rand_pos = Array.new(2) { rand(@grid_size) }
+      # tile = self[rand_pos]
+
+      # next if tile.bombed?
+
       if (y != randY || x != randX) && !@board[randY][randX].bombed
         @board[randY][randX].set_bomb
         bombs -= 1
@@ -68,4 +76,14 @@ class Board
 
     @board
   end
+
+  #   def won?
+  #   @grid.flatten.all? { |tile| tile.bombed? != tile.explored? }
+  #   if bombed.true != explored (false)
+  #   if bombed.false != explored (true)
+  # end
+
+  #   def lost?
+  #   @grid.flatten.any? { |tile| tile.bombed? && tile.explored? }
+  # end
 end

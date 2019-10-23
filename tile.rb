@@ -5,13 +5,14 @@ class Tile
   attr_accessor :revealed
 
   def initialize(board, pos)
+    # board'em jest tutaj sama tablica, a nie instancja klasy Board
     @board = board
-    @direct_neighbors = nil
+    @pos = pos
     @bombed = false
     @flagged = false
     @revealed = false
-    @pos = pos
     @bomb_count = 0
+    @direct_neighbors = nil
   end
 
   #   rendering board
@@ -60,6 +61,8 @@ class Tile
 
     @direct_neighbors.each do |neighbor|
       x, y = neighbor
+
+      # ponowne filtrowanie oznacza, że coś poszło nie tak
       if @board[x] && @board[x][y] && @board[x][y].bombed
         @bomb_count += 1
       end
@@ -67,6 +70,10 @@ class Tile
 
     @bomb_count
   end
+
+  # def adjacent_bomb_count
+  # neighbors.select(&:bombed?).count
+  # end
 
   def set_bomb
     @bombed = true
@@ -106,6 +113,20 @@ class Tile
 
     direct_neighbors
   end
+
+  # def neighbors
+  #   adjacent_coords = DELTAS.map do |(dx, dy)|
+  #     [pos[0] + dx, pos[1] + dy]
+  #   end
+
+  #   adjacent_valid_coords = adjacent_coords.select do |row, col|
+  #     [row, col].all? do |coord|
+  #       coord.between?(0, @board.grid_size - 1)
+  #     end
+  #   end
+
+  #   adjacent_valid_coords.map { |pos| @board[pos] }
+  # end
 
   def inspect
     "Tile: @bombed - #{@bombed} - pos: #{@pos}, @revealed - #{@revealed}, @bomb_count - #{@bomb_count}; direct_neighbors: #{@direct_neighbors}; @flagged: #{@flagged}\n"

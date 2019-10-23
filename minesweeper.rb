@@ -31,10 +31,10 @@ class Game
       setup_board(user_action_and_coords)
     end
 
-    make_tile_action(user_action_and_coords)
+    perform_move(user_action_and_coords)
   end
 
-  def make_tile_action(user_input)
+  def perform_move(user_input)
     action = user_input["action"]
     pos = user_input["coordinates"]
 
