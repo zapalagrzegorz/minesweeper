@@ -50,6 +50,11 @@ class Game
     File.open("save-game.yml", "w") do |file|
       file.write(YAML.dump(@board))
     end
+
+    # puts "Enter filename to save at:"
+    # filename = gets.chomp
+    #
+    # File.write(filename, YAML.dump(self))
   end
 
   def load_game
